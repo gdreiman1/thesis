@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Sep  6 11:22:39 2019
+
+@author: gabriel
+"""
+
+'''Comparing the Iter_10 with Tuned_1'''
+from comet_ml import Experiment
+exp = Experiment(api_key="sqMrI9jc8kzJYobRXRuptF5Tj",
+                        project_name="iter_plotting", workspace="gdreiman1", disabled = False
+                        )
+exp.log_code = True
+exp.log_other('Hypothesis','''These are my plots from the intial iterations "Iter_2" and "Iter_3" ''')
+import pickle
+import os
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+#import the data to compare
+
+data_dir = '/home/gabriel/Dropbox/UCL/Thesis/Data'
+tuned_1 = 'tuned_10.pkl'
+tuned_2 = 'tuned_11.pkl'
+tuned_3 = 'tuned_12.pkl'
+
+save_path = os.path.join(data_dir,tuned_1)
+pickle_off = open(save_path,'rb')
+tuned_1=pickle.load(pickle_off)
+pickle_off.close() 
+save_path = os.path.join(data_dir,tuned_2)
+pickle_off = open(save_path,'rb')
+tuned_2=pickle.load(pickle_off)
+pickle_off.close()
+save_path = os.path.join(data_dir,tuned_3)
+pickle_off = open(save_path,'rb')
+tuned_3=pickle.load(pickle_off)
+pickle_off.close()
+
+untuned_1 = 'test_faster_ranked0.pkl'
+untuned_2 = 'test_faster_ranked1.pkl'
+untuned_3 = 'test_faster_ranked2.pkl'
+
+save_path = os.path.join(data_dir,untuned_1)
+pickle_off = open(save_path,'rb')
+untuned_1=pickle.load(pickle_off)
+pickle_off.close() 
+save_path = os.path.join(data_dir,untuned_2)
+pickle_off = open(save_path,'rb')
+untuned_2=pickle.load(pickle_off)
+pickle_off.close()
+save_path = os.path.join(data_dir,untuned_3)
+pickle_off = open(save_path,'rb')
+untuned_3=pickle.load(pickle_off)
+pickle_off.close()
+
+#now get only the corrected 30 and 50 timepoints
+from iter_plot_help_funcs import get_checkpointsdf,find_active_percents,set_sns_pal
+store_list=[]
+for expr in [tuned_1,tuned_2,tuned_3]:
+    expr = find_active_percents(expr,exp)
+    expr = get_checkpointsdf(expr,10,5)
+    class_selection_list=[]
+    for _,row in expr.iterrows():
+        class_selection_list.append(row.Classifier+'_tuned')
+    expr['Exp_Cond'] = class_selection_list
+    store_list.append(expr)
+merged_tuned_df = pd.concat(store_list)
+store_list=[]
+for expr in [untuned_1,untuned_2,untuned_3]:
+    expr = find_active_percents(expr,exp)
+    expr = get_checkpointsdf(expr,10,5)
+    class_selection_list=[]
+    for _,row in expr.iterrows():
+        class_selection_list.append(row.Classifier+'_untuned')
+    expr['Exp_Cond'] = class_selection_list
+    store_list.append(expr)
+
+merged_untuned_df = pd.concat(store_list)
+
+merged_df = pd.concat([merged_tuned_df,merged_untuned_df])
+hue_order_list = list(np.unique(merged_df.Exp_Cond))
+hue_order_list.reverse()
+set_sns_pal('paired')
+g=sns.catplot(x='Classifier',y='Score',hue='Exp_Cond',col='Lib%',data=merged_df,
+            kind='box', hue_order=hue_order_list)
+plt.suptitle('Percent Actives Recovered at 30% and 50% of library')
+plt.show()
