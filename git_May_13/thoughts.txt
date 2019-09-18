@@ -1,0 +1,6 @@
+Need to normalize molecular char data columnwise! At least for NN.
+Need to get other example data sets working, fix werid sdf error.
+Start keeping signal in processed data frame.
+Investigate lightgbm success.
+**Unbalanced data is killing us** need to either augment with google paper or start undersampling.
+Graph cnn latent embeding will make it easier to use standard ML approaches since the FPs are sparse and binary.
