@@ -1,0 +1,11 @@
+This contains all the code needed to replicate the experiments described in section 4.3 of the thesis.
+
+Download the following AIDs:
+
+Save to a folder (replacing mine in saved).
+
+Run the following scripts:
+Process_3Test_Aid_Files.py
+Adding_bit_mfp.py
+Add_graph_reps.py
+iterative_ranked_innerrep_tuned1_test
