@@ -1,8 +1,9 @@
 This contains all the code needed to replicate the experiments described in section 4.3 of the thesis.
 
-Download the following AIDs:
-
-Save to a folder (replacing mine in saved).
+Vist the following URLs. At each, click download and download the files labeled 'Deposited Data Table Only' and 'Tested Substances Structures'. Put these two files in a subfolder of a folder named Data ie Data/AID_Number/
+https://pubchem.ncbi.nlm.nih.gov/bioassay/598
+https://pubchem.ncbi.nlm.nih.gov/bioassay/1259354
+https://pubchem.ncbi.nlm.nih.gov/bioassay/488969
 
 Run the following scripts:
 Process_3Test_Aid_Files.py
